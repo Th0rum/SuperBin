@@ -1,0 +1,16 @@
+version: "2"
+
+sql:
+  - engine: sqlite
+    schema: migrations
+    queries: queries
+    gen:
+      go:
+        package: "dbo"
+        out: "."
+overrides:
+  go:
+    rename:
+      passwordhash: PasswordHash
+      passwordsalt: PasswordSalt
+      encryptsalt: EncryptSalt

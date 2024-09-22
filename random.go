@@ -11,63 +11,55 @@ You should have received a copy of the GNU General Public License along with Gig
 package main
 
 import (
-
+	"context"
 	"math/rand"
-	"time"
-	"strconv"
-	"database/sql"
 	"os"
+	"strconv"
+	"time"
 
+	"app/internal/dbo"
 )
 
-//we want to avoid ambiguous characters like i, I, l, 1, etc
+// we want to avoid ambiguous characters like i, I, l, 1, etc
 const charset = "abcdefghkmnpqrstwxyzABCDEFGHJKLMNPQRSTWXYZ23456789"
 
 var seed rand.Source
 var random *rand.Rand
 
-func init(){
+func init() {
 
-    seed = rand.NewSource(time.Now().UnixNano())
-    random = rand.New(seed)
-	
+	seed = rand.NewSource(time.Now().UnixNano())
+	random = rand.New(seed)
+
 }
-
 
 func GenRandFileName(basePath string, extension string) string {
 
-    for {
-        fileName := strconv.FormatInt(time.Now().UnixMilli(), 10) + GenRandString(5) + extension
-        filePath := basePath + fileName
+	for {
+		fileName := strconv.FormatInt(time.Now().UnixMilli(), 10) + GenRandString(5) + extension
+		filePath := basePath + fileName
 
-        if _, err := os.Stat(filePath); os.IsNotExist(err) {
-            return filePath
-        }
-    }
+		if _, err := os.Stat(filePath); os.IsNotExist(err) {
+			return filePath
+		}
+	}
 }
 
-func GenRandPath(length int, db * sql.DB) string{
-	
+func GenRandPath(ctx context.Context, length int, db *dbo.Queries) string {
 	for {
-		
-		randPath := GenRandString(6)
-		var id string
-
-		db.QueryRow("SELECT id FROM data WHERE id = ?", randPath).Scan(&id)
-
-		if(id == ""){
-			return randPath	
+		randPath := GenRandString(length)
+		exists, _ := db.HasDataWithID(ctx, randPath)
+		if !exists {
+			return randPath
 		}
-
-	}	
-
+	}
 }
 
 // Function to generate a random string
-func GenRandString(length int) string{
-    result := make([]byte, length)
-    for i := range result {
-        result[i] = charset[random.Intn(len(charset))]
-    }
-    return string(result)
+func GenRandString(length int) string {
+	result := make([]byte, length)
+	for i := range result {
+		result[i] = charset[random.Intn(len(charset))]
+	}
+	return string(result)
 }

@@ -1,4 +1,7 @@
 *.exe
 *.bat
 *.db
+.vscode
+.idea
 uploads/
+build/
