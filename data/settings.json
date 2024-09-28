@@ -6,5 +6,7 @@
 
 	"pbkdf2Iterations": 10000,
 	
-	"cmdUploadDefaultDurationMinute" : 10
+	"cmdUploadDefaultDurationMinute" : 10,
+
+	"BaseUrl": "/gigapaste"
 }

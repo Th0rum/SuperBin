@@ -25,6 +25,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -133,7 +134,7 @@ func FileHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 				return
 			}
 
-			_, err = io.WriteString(w, r.Host+"/"+randUrl)
+			_, err = io.WriteString(w, r.Host+Global.BaseUrl+"/"+randUrl)
 			if err != nil {
 				fmt.Println(err)
 				return
@@ -154,7 +155,7 @@ func FileHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 				return
 			}
 
-			_, err = io.WriteString(w, r.Host+"/"+randUrl)
+			_, err = io.WriteString(w, r.Host+Global.BaseUrl+"/"+randUrl)
 			if err != nil {
 				fmt.Println(err)
 				return
@@ -253,7 +254,7 @@ func TextHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	}
 
-	_, err = io.WriteString(w, r.Host+"/"+randUrl)
+	_, err = io.WriteString(w, r.Host+Global.BaseUrl+"/"+randUrl)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -263,7 +264,8 @@ func TextHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 func DownloadHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
-	path := r.URL.Path[1:] //dont include the '/'
+	pathParts := strings.Split(r.URL.Path, "/")
+	path := pathParts[len(pathParts)-1]
 
 	var fType string
 	var fFileName string
@@ -306,7 +308,7 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			return
 		}
 
-		err = tmpl.Execute(w, struct{ Path string }{Path: path})
+		err = tmpl.Execute(w, struct{ Path string }{Path: Global.BaseUrl[1:] + "/" + path})
 
 		if err != nil {
 			fmt.Println(err)

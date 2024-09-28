@@ -218,6 +218,7 @@ function upload() {
 
 		let minutes = duration.value * convertMinutes[durationModifiers.value]
 
+		let baseURL = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/"))
 		if(files){
 		
 			const formData = new FormData();
@@ -230,14 +231,14 @@ function upload() {
 				formData.append('file', files[i]); //'file' as the key
 			}
 
-			xhr.open('POST', '/'); 
+			xhr.open('POST', baseURL + "/");
 			xhr.send(formData);
 
 		}else{
 
 			if(textArea.value.trim () !== ""){
 
-				xhr.open('POST', '/postText');
+				xhr.open('POST', baseURL + '/postText');
 				xhr.send(JSON.stringify({duration: minutes, pass: password.value, burn: burn.checked, text: textArea.value}));
 
 			}

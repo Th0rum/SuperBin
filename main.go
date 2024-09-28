@@ -34,10 +34,10 @@ var settingsFile string
 // Theoretically won't ever conflict with generated URL, because generated URL won't contain a dot "."
 func serveFile(w http.ResponseWriter, r *http.Request, next func(w2 http.ResponseWriter, r2 *http.Request)) {
 	// Remove leading slash from the URL path
-	path := strings.TrimPrefix(r.URL.Path, "/")
-
+	path := strings.TrimPrefix(r.URL.Path, Global.BaseUrl+"/")
+	fmt.Printf("path: %s\n", path)
 	if path == "" {
-		http.Redirect(w, r, "/index.html", http.StatusFound)
+		http.Redirect(w, r, Global.BaseUrl+"/index.html", http.StatusFound)
 		return
 	}
 
@@ -89,7 +89,9 @@ func main() {
 	db := InitDatabase()
 	InitSettings()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(Global.BaseUrl+"/", func(w http.ResponseWriter, r *http.Request) {
+
+		fmt.Printf("handling: %s %s\n", r.Method, r.URL.Path)
 
 		if r.Method == http.MethodGet {
 
@@ -119,7 +121,7 @@ func main() {
 
 	})
 
-	http.HandleFunc("/postText", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(Global.BaseUrl+"/postText", func(w http.ResponseWriter, r *http.Request) {
 
 		r.Body = http.MaxBytesReader(w, r.Body, 1024*1024*Global.TextSizeLimit)
 		TextHandler(w, r, db)

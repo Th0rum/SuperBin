@@ -17,13 +17,13 @@ import (
 )
 
 type Setting struct {
-	FileSizeLimit                  int64 `json:"FileSizeLimitMB"`                //maximum allowed upload file size
-	TextSizeLimit                  int64 `json:"TextSizeLimitMB"`                //maximum allowed upload text size
-	StreamSizeLimit                int64 `json:"StreamSizeLimitKB"`              //streaming buffer size
-	StreamThrottle                 int64 `json:"StreamThrottleMS"`               //streaming Sleep() timer to not use too much cpu
-	Pbkdf2Iteraions                int   `json:"Pbkdf2Iteraions"`                //key derviation function iterations
-	CmdUploadDefaultDurationMinute int64 `json:"CmdUploadDefaultDurationMinute"` //default file duration when uploaded through curl / other cmdline
-
+	FileSizeLimit                  int64  `json:"FileSizeLimitMB"`                //maximum allowed upload file size
+	TextSizeLimit                  int64  `json:"TextSizeLimitMB"`                //maximum allowed upload text size
+	StreamSizeLimit                int64  `json:"StreamSizeLimitKB"`              //streaming buffer size
+	StreamThrottle                 int64  `json:"StreamThrottleMS"`               //streaming Sleep() timer to not use too much cpu
+	Pbkdf2Iteraions                int    `json:"Pbkdf2Iteraions"`                //key derviation function iterations
+	CmdUploadDefaultDurationMinute int64  `json:"CmdUploadDefaultDurationMinute"` //default file duration when uploaded through curl / other cmdline
+	BaseUrl                        string `json:"BaseUrl"`                        //url prefix for reverse proxy setups (must include leading /)
 }
 
 var Global Setting
@@ -43,5 +43,7 @@ func InitSettings() {
 		fmt.Println("Error decoding JSON:", err)
 		return
 	}
+
+	fmt.Printf("Settings loaded: %+v\n", Global)
 
 }
