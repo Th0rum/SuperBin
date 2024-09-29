@@ -8,5 +8,5 @@
 	
 	"cmdUploadDefaultDurationMinute" : 10,
 
-	"BaseUrl": "/gigapaste"
+	"BaseUrl": ""
 }
