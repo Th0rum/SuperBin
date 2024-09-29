@@ -43,8 +43,18 @@ You can modify the variables inside `data/settings.json`
 - `streamThrottleMS` = add throttle to the encryption, decryption, upload & download buffer to limit cpu usage
 - `pbkdf2Iterations` = key derivation algorithm iteration, the higher the better, but 100000 should be enough
 - `cmdUploadDefaultDurationMinute` = default file duration if you upload file through curl if duration is not specified
+- `BaseUrl` = a prefix for all the endpoints, which is useful when hosting multiple services on the same hostname
 
 You can modify CPU/memory usage by calculating the memory usage / sec with `streamSizeLimitKB * (1000/streamThrottleMS)`, the default setting can handle 40 MB of data on file upload, download, encryption & decryption / second, you can tune this down if needed
+
+If you want to run GigaPaste behind a caddy reverse proxy, you can, for example, set the `BaseUrl` setting to "/gigapaste" and use the following config in the CaddyFile:
+```
+yoursite.com {
+    encode zstd gzip
+    reverse_proxy /gigapaste/* gigapaste:80
+}
+```
+and access GigaPaste at `yoursite.com/gigapaste/`
 
 # Curl upload ⬆️
 `curl -F "file=@main.go" -F "duration=10" -F "pass=123" -F "burn=true" yoursite.com`  
