@@ -35,7 +35,7 @@ var settingsFile string
 func serveFile(w http.ResponseWriter, r *http.Request, next func(w2 http.ResponseWriter, r2 *http.Request)) {
 	// Remove leading slash from the URL path
 	path := strings.TrimPrefix(r.URL.Path, Global.BaseUrl+"/")
-	fmt.Printf("path: %s\n", path)
+
 	if path == "" {
 		http.Redirect(w, r, Global.BaseUrl+"/index.html", http.StatusFound)
 		return
